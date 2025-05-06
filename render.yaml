@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: bloxixe-game
+    env: static
+    buildCommand: echo "No build needed"
+    staticPublishPath: .
+    envVars:
+      - key: FIREBASE_CONFIG
+        sync: false
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: no-cache

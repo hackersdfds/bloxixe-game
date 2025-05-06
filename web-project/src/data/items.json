@@ -1,0 +1,16 @@
+{
+  "items": [
+    {
+      "id": "HMP001",
+      "name": "Huge Mining Penguin",
+      "value": "15M",
+      "rawValue": 15000000,
+      "image": "https://i.postimg.cc/cHx9Sk2y/Huge-Mining-Penguin.png",
+      "rarity": "Huge",
+      "category": "Pet",
+      "gameOrigin": "Pet Simulator 99",
+      "tradeable": true,
+      "addedDate": "2024-05-05"
+    }
+  ]
+}

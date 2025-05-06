@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bloxixe - Trading Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background">
+        <div class="gradient"></div>
+    </div>
+
+    <nav class="top-bar">
+        <div class="logo">
+            <h1>BLOXIXEGAME</h1>
+        </div>
+        <div class="center-logo">
+            <img src="https://i.postimg.cc/cL9D7Bbd/Gemini-Generated-Image-k1ydi2k1ydi2k1yd-removebg-preview.png" alt="BloxixeGame Logo">
+        </div>
+        <div class="user-section">
+            <button class="login-btn" id="loginBtn">Login</button>
+        </div>
+    </nav>
+
+    <div class="sidebar">
+        <div class="toggle-btn">
+            <span class="arrow">&#8250;</span>
+        </div>
+        <div class="sidebar-content">
+            <div class="inventory-section">
+                <span class="inventory-icon">🎒</span>
+                <span class="inventory-text">INVENTORY</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <span class="nav-text">Home</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-text">CoinFlip</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-text">Trade</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span class="nav-text">Shop</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <div class="content">
+        <!-- Section Home -->
+        <section class="content-section" id="home-section">
+            <div class="welcome-banner">
+                <h1>Welcome!</h1>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">🆕</span>
+                        <p>New site - Made 1 month ago</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">👥</span>
+                        <p>Good team making the site better</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔒</span>
+                        <p>Safe site - No scam</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🎮</span>
+                        <p>Best place to bet your items</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="steps-section">
+                <h2>Start Playing</h2>
+                <div class="steps-container">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Make Account</h3>
+                        <p>Easy to join</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>Add Items</h3>
+                        <p>Put your items in</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Play</h3>
+                        <p>Start winning!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section CoinFlip -->
+        <section class="content-section" id="coinflip-section">
+            <div class="coinflip-container">
+                <div class="coinflip-header">
+                    <div class="coinflip-title">
+                        <h2>CoinFlip Games</h2>
+                        <span class="live-games">Live Games: <span id="gamesCount">0</span></span>
+                    </div>
+                    <button class="create-game-btn" id="createGameBtn">
+                        <span class="plus-icon">+</span>
+                        Create Game
+                    </button>
+                </div>
+                
+                <div class="games-wrapper">
+                    <div class="games-container" id="gamesContainer">
+                        <!-- Les parties seront ajoutées ici dynamiquement -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Trade -->
+        <section class="content-section" id="trade-section">
+            <h2>Trading Coming Soon...</h2>
+        </section>
+
+        <!-- Section Shop -->
+        <section class="content-section" id="shop-section">
+            <h2>Shop Coming Soon...</h2>
+        </section>
+    </div>
+
+    <!-- Ajouter la popup -->
+    <div class="popup-overlay" id="loginPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2>Login with Roblox</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="popup-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="robloxUsername">Roblox Username</label>
+                        <input type="text" id="robloxUsername" required placeholder="Enter your Roblox username">
+                    </div>
+                    <button type="submit" class="submit-btn">Connect</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ajouter la popup admin après la popup login -->
+    <div class="popup-overlay" id="adminPopup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2>Admin Access</h2>
+                <button class="close-btn" id="adminCloseBtn">&times;</button>
+            </div>
+            <div class="popup-body">
+                <form id="adminForm">
+                    <div class="form-group">
+                        <label for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Access Panel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ajouter après les autres popups -->
+    <div class="popup-overlay" id="inventoryPopup">
+        <div class="popup-content inventory-popup">
+            <div class="popup-header">
+                <h2>Your Inventory</h2>
+                <button class="close-btn" id="inventoryCloseBtn">&times;</button>
+            </div>
+            <div class="popup-body">
+                <div class="inventory-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Items:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Value:</span>
+                        <span class="stat-value">0</span>
+                    </div>
+                </div>
+                <div class="inventory-grid">
+                    <!-- Les items seront ajoutés dynamiquement ici -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup de création de partie -->
+    <div class="popup-overlay" id="createGamePopup">
+        <div class="popup-content create-game-popup">
+            <div class="popup-header">
+                <h2>Create CoinFlip Game</h2>
+                <button class="close-btn" id="createGameCloseBtn">&times;</button>
+            </div>
+            <div class="popup-body">
+                <div class="select-items">
+                    <h3>Select Items</h3>
+                    <div class="inventory-grid create-game-inventory"></div>
+                </div>
+                <div class="selected-items">
+                    <h3>Selected Items</h3>
+                    <div class="selected-items-container" id="selectedItems">
+                        <!-- Items sélectionnés apparaîtront ici -->
+                    </div>
+                    <div class="total-value">
+                        Total Value: <span id="totalValue">0</span>
+                    </div>
+                </div>
+                <div class="side-selection">
+                    <h3>Choose Your Side</h3>
+                    <div class="sides-container">
+                        <div class="side-option red" data-side="red">
+                            <div class="coin red-coin"></div>
+                            <span>Red Side</span>
+                        </div>
+                        <button class="create-btn" id="finalCreateBtn" disabled>
+                            Create Game
+                        </button>
+                        <div class="side-option blue" data-side="blue">
+                            <div class="coin blue-coin"></div>
+                            <span>Blue Side</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ajouter avant la fermeture du body -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-background">
+            <div class="gradient"></div>
+        </div>
+        <div class="admin-content">
+            <div class="admin-header">
+                <h1>Admin Panel</h1>
+                <button class="back-btn" id="adminBackBtn">
+                    <span class="back-icon">⬅</span>
+                    Return to Site
+                </button>
+            </div>
+            <div class="admin-grid">
+                <!-- Ajoutez ici vos contrôles admin -->
+                <div class="admin-card">
+                    <h3>User Management</h3>
+                    <!-- Contenu à venir -->
+                </div>
+                <div class="admin-card">
+                    <h3>Item Management</h3>
+                    <!-- Contenu à venir -->
+                </div>
+                <div class="admin-card">
+                    <h3>System Settings</h3>
+                    <!-- Contenu à venir -->
+                </div>
+                <div class="admin-card">
+                    <h3>Initialize Inventory</h3>
+                    <div class="admin-actions">
+                        <button class="admin-btn" id="initEmptyInv">Empty Inventory</button>
+                        <button class="admin-btn" id="init3Penguins">3x Huge Mining Penguin</button>
+                    </div>
+                </div>
+                <div class="admin-card users-management-card">
+                    <h3>Users Management</h3>
+                    <div class="users-stats">
+                        <p>Total Users: <span id="totalUsers">0</span></p>
+                        <div class="search-users">
+                            <input type="text" id="searchUsers" placeholder="Search users...">
+                        </div>
+                    </div>
+                    <div class="users-list-container">
+                        <div class="users-list" id="usersList">
+                            <!-- Users will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add before your other scripts -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="js/socket.js"></script>
+    <script src="js/users.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
