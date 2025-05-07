@@ -16,26 +16,6 @@ class GameManager {
         this.socket.on('gameJoined', (game) => {
             this.updateGameDisplay(game);
         });
-
-        this.socket.on('gameCompleted', (game) => {
-            this.showGameResult(game);
-        });
-
-        this.socket.on('gameCancelled', (gameId) => {
-            this.removeGameFromDisplay(gameId);
-        });
-    }
-
-    createGame(gameData) {
-        this.socket.emit('createGame', gameData);
-    }
-
-    joinGame(gameId, items, side) {
-        this.socket.emit('joinGame', { gameId, items, side });
-    }
-
-    cancelGame(gameId) {
-        this.socket.emit('cancelGame', gameId);
     }
 
     displayGames(games) {
@@ -45,36 +25,18 @@ class GameManager {
     }
 
     addGameToDisplay(game) {
-        // Créer l'élément HTML pour la partie
         const gameElement = this.createGameElement(game);
         document.getElementById('gamesContainer').prepend(gameElement);
     }
 
-    updateGameDisplay(game) {
-        const gameElement = document.querySelector(`[data-game-id="${game.id}"]`);
-        if (gameElement) {
-            gameElement.innerHTML = this.createGameContent(game);
-        }
-    }
-
-    showGameResult(game) {
-        const gameElement = document.querySelector(`[data-game-id="${game.id}"]`);
-        if (gameElement) {
-            gameElement.classList.add('completed');
-            gameElement.innerHTML += `
-                <div class="game-result">
-                    <h3>${game.winner} wins!</h3>
-                </div>
-            `;
-        }
-    }
-
-    removeGameFromDisplay(gameId) {
-        const gameElement = document.querySelector(`[data-game-id="${gameId}"]`);
-        if (gameElement) {
-            gameElement.remove();
-        }
+    createGameElement(game) {
+        const div = document.createElement('div');
+        div.className = 'game-card';
+        div.dataset.gameId = game.id;
+        // Add game display logic here
+        return div;
     }
 }
 
+// Initialize the game manager
 window.gameManager = new GameManager();
