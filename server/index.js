@@ -22,6 +22,9 @@ const connectedUsers = new Map();
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
+    // Envoyer les parties existantes au nouveau client
+    socket.emit('initializeGames', Array.from(activeGames.values()));
+
     // Handle user login
     socket.on('userLogin', (username) => {
         connectedUsers.set(socket.id, username);
@@ -32,13 +35,53 @@ io.on('connection', (socket) => {
     socket.on('createGame', (gameData) => {
         const username = connectedUsers.get(socket.id);
         const game = {
-            ...gameData,
-            creator: username,
             id: `game_${Date.now()}`,
-            status: 'waiting'
+            creator: username,
+            side: gameData.side,
+            items: gameData.items,
+            totalValue: gameData.totalValue,
+            status: 'waiting',
+            createdAt: Date.now()
         };
+        
         activeGames.set(game.id, game);
         io.emit('gameCreated', game);
+    });
+
+    // Gérer le join d'une partie
+    socket.on('joinGame', (data) => {
+        const { gameId, items, side } = data;
+        const username = connectedUsers.get(socket.id);
+        const game = activeGames.get(gameId);
+
+        if (game && game.status === 'waiting') {
+            game.opponent = {
+                username,
+                items,
+                side
+            };
+            game.status = 'playing';
+            
+            activeGames.set(gameId, game);
+            io.emit('gameJoined', game);
+            
+            // Lancer le tirage après un délai
+            setTimeout(() => {
+                const winner = Math.random() < 0.5 ? game.creator : game.opponent.username;
+                game.status = 'completed';
+                game.winner = winner;
+                io.emit('gameCompleted', game);
+            }, 5000);
+        }
+    });
+
+    // Gérer la suppression d'une partie
+    socket.on('cancelGame', (gameId) => {
+        const game = activeGames.get(gameId);
+        if (game && game.creator === connectedUsers.get(socket.id)) {
+            activeGames.delete(gameId);
+            io.emit('gameCancelled', gameId);
+        }
     });
 
     // Handle admin actions
