@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
     <title>Bloxixe - Trading Platform</title>
     <link rel="stylesheet" href="css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -286,10 +286,11 @@
         </div>
     </div>
 
-    <!-- Add before your other scripts -->
+    <!-- Socket.IO must come first -->
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script src="js/games.js"></script>
-    <script src="js/users.js"></script>
-    <script src="js/main.js"></script>
+    <!-- Then your local scripts with correct paths -->
+    <script src="/js/games.js"></script>
+    <script src="/js/users.js"></script>
+    <script src="/js/main.js"></script>
 </body>
 </html>
