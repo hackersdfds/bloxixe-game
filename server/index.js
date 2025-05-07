@@ -8,12 +8,12 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-// Middleware - Important: order matters!
+// Middleware - order is important!
 app.use(cors());
-
-// Serve static files - This should come BEFORE other routes
-app.use(express.static(path.join(__dirname, '..', 'web-project', 'src')));
 app.use(express.json());
+
+// Serve static files BEFORE any routes
+app.use(express.static(path.join(__dirname, '..', 'web-project', 'src')));
 
 // Store active games and users
 const activeGames = new Map();
@@ -100,7 +100,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Catch-all route - This should come AFTER static files
+// Catch-all route AFTER static files
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'web-project', 'src', 'index.html'));
 });
