@@ -8,17 +8,18 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
-// Middleware
+// Middleware - Important: order matters!
 app.use(cors());
 
-// Servir les fichiers statiques depuis le dossier web-project/src
+// Serve static files - This should come BEFORE other routes
 app.use(express.static(path.join(__dirname, '..', 'web-project', 'src')));
+app.use(express.json());
 
 // Store active games and users
 const activeGames = new Map();
 const connectedUsers = new Map();
 
-// Socket.IO connections
+// Your socket.io setup
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
@@ -99,7 +100,7 @@ io.on('connection', (socket) => {
     });
 });
 
-// Route par défaut qui renvoie index.html
+// Catch-all route - This should come AFTER static files
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'web-project', 'src', 'index.html'));
 });
