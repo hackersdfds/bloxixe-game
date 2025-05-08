@@ -6,30 +6,33 @@ const { Server } = require('socket.io');
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 
-// Middleware - order is important!
-app.use(cors());
-app.use(express.json());
-
-// Serve static files BEFORE any routes
-app.use(express.static(path.join(__dirname, '..', 'web-project', 'src')));
-
-// Store active games and users
+// Active games storage
 const activeGames = new Map();
 const connectedUsers = new Map();
 
-// Your socket.io setup
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'web-project', 'src')));
+
+// Socket connection handling
 io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // Envoyer les parties existantes au nouveau client
+    // Send existing games to new client
     socket.emit('initializeGames', Array.from(activeGames.values()));
 
     // Handle user login
     socket.on('userLogin', (username) => {
         connectedUsers.set(socket.id, username);
-        io.emit('updateUsersList', Array.from(connectedUsers.values()));
+        io.emit('updateUsers', Array.from(connectedUsers.values()));
     });
 
     // Handle game creation
@@ -38,71 +41,48 @@ io.on('connection', (socket) => {
         const game = {
             id: `game_${Date.now()}`,
             creator: username,
-            side: gameData.side,
             items: gameData.items,
+            side: gameData.side,
             totalValue: gameData.totalValue,
             status: 'waiting',
             createdAt: Date.now()
         };
-        
+
         activeGames.set(game.id, game);
         io.emit('gameCreated', game);
     });
 
-    // Gérer le join d'une partie
-    socket.on('joinGame', (data) => {
-        const { gameId, items, side } = data;
-        const username = connectedUsers.get(socket.id);
+    // Handle game joining
+    socket.on('joinGame', ({ gameId, items, side }) => {
         const game = activeGames.get(gameId);
-
         if (game && game.status === 'waiting') {
             game.opponent = {
-                username,
+                username: connectedUsers.get(socket.id),
                 items,
                 side
             };
             game.status = 'playing';
             
-            activeGames.set(gameId, game);
-            io.emit('gameJoined', game);
-            
-            // Lancer le tirage après un délai
+            // Simulate coin flip
             setTimeout(() => {
                 const winner = Math.random() < 0.5 ? game.creator : game.opponent.username;
-                game.status = 'completed';
                 game.winner = winner;
+                game.status = 'completed';
                 io.emit('gameCompleted', game);
-            }, 5000);
+            }, 3000);
+
+            activeGames.set(gameId, game);
+            io.emit('gameJoined', game);
         }
     });
 
-    // Gérer la suppression d'une partie
-    socket.on('cancelGame', (gameId) => {
-        const game = activeGames.get(gameId);
-        if (game && game.creator === connectedUsers.get(socket.id)) {
-            activeGames.delete(gameId);
-            io.emit('gameCancelled', gameId);
-        }
-    });
-
-    // Handle admin actions
-    socket.on('adminAction', (action) => {
-        if (action.type === 'giveItems') {
-            io.emit('itemsDistributed', action.data);
-        }
-    });
-
-    // Handle disconnection
+    // Handle disconnect
     socket.on('disconnect', () => {
+        const username = connectedUsers.get(socket.id);
         connectedUsers.delete(socket.id);
-        io.emit('updateUsersList', Array.from(connectedUsers.values()));
-        console.log('User disconnected:', socket.id);
+        io.emit('updateUsers', Array.from(connectedUsers.values()));
+        console.log('User disconnected:', username);
     });
-});
-
-// Catch-all route AFTER static files
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'web-project', 'src', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
