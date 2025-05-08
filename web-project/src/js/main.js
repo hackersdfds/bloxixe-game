@@ -30,23 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const username = document.getElementById('robloxUsername').value;
         
-        // Ajouter l'utilisateur à la liste
-        window.usersManager.addUser(username);
-        
-        // Remplacer le bouton login par le username
-        const userSection = document.querySelector('.user-section');
-        // Dans l'événement submit du formulaire et dans la vérification du localStorage
-        userSection.innerHTML = `
-            <div class="user-display">
-                <span>${username}</span>
-            </div>
-        `;
-        
-        // Fermer la popup
-        loginPopup.classList.remove('active');
-        
-        // Sauvegarder le username dans le localStorage
+        // Store username
         localStorage.setItem('robloxUsername', username);
+        
+        // Notify server
+        window.gameSocket.emit('userLogin', username);
+        
+        // Close login popup
+        loginPopup.classList.remove('active');
     });
 
     // Vérifier si l'utilisateur était déjà connecté
